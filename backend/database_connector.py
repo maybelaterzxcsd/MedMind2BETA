@@ -1,4 +1,3 @@
-# database_connector.py
 from abc import ABC, abstractmethod
 import sqlite3
 
@@ -18,12 +17,10 @@ class LocalSQLiteDB(PatientDatabase):
         self.db_path = db_path or "data/test_patients.db"
         
     def get_patient_history(self, patient_id: str) -> list:
-        # Заглушка для теста
         return [
             {"date": "2026-02-27", "text": "Жалобы на головную боль..."},
             {"date": "2026-03-01", "text": "Повторный осмотр..."}
         ]
     
     def save_visit_record(self, record: dict) -> bool:
-        # Логика сохранения визита
         return True

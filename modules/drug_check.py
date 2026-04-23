@@ -1,4 +1,3 @@
-# E:\MedMind2.0\modules\drug_check.py
 import os
 
 def find_drugs_in_text(text: str):

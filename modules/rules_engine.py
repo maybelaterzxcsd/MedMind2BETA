@@ -9,7 +9,6 @@ def filter_drugs(text: str) -> dict:
     
     text_lower = text.lower()
     
-    # Логика проверки (можно улучшить)
     if any(kw in text_lower for kw in keywords_taken):
         drugs_taken.append("Эналаприл")
     

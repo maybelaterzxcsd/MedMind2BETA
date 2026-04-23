@@ -1,4 +1,3 @@
-# backend/modules/recommendation_engine.py
 import json
 import os
 from typing import List, Dict
@@ -26,41 +25,39 @@ class ClinicalDecisionEngine:
             return []
     
     def generate_recommendation(
-        self, 
-        drugs_found: list[str], 
+        self,
+        drugs_found: list[str],
         text: str = ""
     ) -> List[Dict]:
         """
         Формирует список рекомендаций на основе найденных лекарств
-        
+
         Args:
             drugs_found: Список названий препаратов из текста
             text: Полный текст пациента (для контекста)
-        
+
         Returns:
             Список клинических рекомендаций
         """
         recommendations = []
-        
-        # Конвертируем названия в нижний регистр для сравнения
+
         drugs_lower = [d.lower().strip() for d in drugs_found]
-        
-        # Проверяем все пары с базой знаний
+
         for conflict in self.conflicts:
-            matches_a = any(
-                d.lower() in drugs_lower or 
-                d.lower() in text.lower()
-                for d in conflict['drugs']
-            )
+            matched_drugs_a = [
+                d for d in conflict['drugs']
+                if d.lower() in drugs_lower or d.lower() in text.lower()
+            ]
             
-            matches_b = any(
-                d.lower() in drugs_lower or 
-                d.lower() in text.lower()
-                for d in conflict.get('with_drugs', [])
-            )
-            
+            matched_drugs_b = [
+                d for d in conflict.get('with_drugs', [])
+                if d.lower() in drugs_lower or d.lower() in text.lower()
+            ]
+
+            matches_a = len(matched_drugs_a) > 0
+            matches_b = len(matched_drugs_b) > 0
+
             if matches_a and matches_b:
-                # Формируем рекомендации
                 rec = {
                     "type": "contraindication",
                     "warning": conflict['warning'],
@@ -69,12 +66,13 @@ class ClinicalDecisionEngine:
                     "alternative_drugs": conflict.get('recommendation', {}).get('alternative', []),
                     "reason": conflict.get('recommendation', {}).get('reason', ''),
                     "monitoring": conflict.get('monitoring', ''),
-                    "source": conflict.get('source', '')
+                    "source": conflict.get('source', ''),
+                    "drugs": matched_drugs_a,  
+                    "with_drugs": matched_drugs_b  
                 }
                 recommendations.append(rec)
-        
+
         return recommendations
 
 
-# Глобальный инстанс для повторного использования
 decision_engine = ClinicalDecisionEngine()

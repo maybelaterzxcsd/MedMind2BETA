@@ -1,4 +1,3 @@
-# modules/html_report_generator.py
 from datetime import datetime
 import html
 import re
@@ -6,13 +5,11 @@ import re
 def generate_html_report(entities: list):
     """Генерирует официальный медицинский отчёт с фильтрацией мусора"""
     
-    # Список слов, которые ИИ может спутать с симптомами (стоп-слова)
     NOISE_WORDS = {
         ',', '.', 'и', 'или', 'но', 'не', 'в', 'на', 'без', 'за', 
         'под', 'над', 'при', 'по', 'о', 'с', 'у', 'к', 'от', 'для'
     }
     
-    # Фильтрация данных
     categories = {
         'СИМПТОМЫ': set(),
         'ЛЕКАРСТВА': set(),
@@ -31,26 +28,22 @@ def generate_html_report(entities: list):
         label = str(item.get('label', '')).upper().strip()
         text = str(item.get('text', ''))
         
-        # 1️⃣ Исключаем категорию O и пустые значения
         if text.strip() == 'o' or len(text.strip()) < 2:
             continue
             
-        # 2️⃣ Исключаем стоп-слова
         if text.strip().lower() in NOISE_WORDS:
             continue
             
-        # Добавляем в нужную категорию
         matched = False
         for key, vals in keywords_map.items():
             if label in vals:
-                categories[key].add(text.lower().capitalize()) # Приводим к нормальном виду
+                categories[key].add(text.lower().capitalize()) 
                 matched = True
                 break
         
         if matched:
             cleaned_entities.append(item)
     
-    # Форматируем списки для отображения
     def format_items(items):
         if not items:
             return '<i>Не выявлено</i>'
