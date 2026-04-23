@@ -65,6 +65,7 @@ npm run dev
 3. Откройте браузер: http://localhost:5173
 
 ## Структура проекта
+```bash
 MedMind2.0/
 ├── backend/              # Бэкенд (Python/FastAPI)
 │   ├── main.py          # Точка входа
@@ -86,6 +87,7 @@ MedMind2.0/
 ├── scripts/           # Вспомогательные скрипты
 ├── data/              # Данные (синтетические датасеты)
 └── tests/             # Тесты
+```
 
 ## Модели
 Модель `rubert_medical_v2` (2.2 GB) не включена в репозиторий из-за размера и размещена на Hugging Face:
@@ -100,12 +102,14 @@ MedMind2.0/
 4. Распакуй содержимое в папку:
    MedMind2.0/models/rubert_medical_v2/
 5. Структура после распаковки должна быть такой:
+```bash
 models/rubert_medical_v2/
 ├── config.json
 ├── model.safetensors
 ├── tokenizer.json
 ├── tokenizer_config.json
 └── training_args.bin
+```
 
 ## Пример использования
 Входные данные:
